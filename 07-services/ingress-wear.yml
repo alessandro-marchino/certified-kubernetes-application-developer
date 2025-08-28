@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-wear
+spec:
+  rules:
+    - host: www.my-online-store.com
+      http:
+        paths:
+          # www.my-online-store.com/wear
+          - path: /wear
+            pathType: Prefix
+            backend:
+              service:
+                name: wear-service
+                port:
+                  number: 80
+          # www.my-online-store.com/watch
+          - path: /watch
+            pathType: Prefix
+            backend:
+              service:
+                name: watch-service
+                port:
+                  number: 80
+    - host: www.wear.my-online-store.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: wear-service
+                port:
+                  number: 80
+    - host: www.watch.my-online-store.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: watch-service
+                port:
+                  number: 80
