@@ -1,5 +1,7 @@
 package flightticket
 
+// https://github.com/kubernetes/sample-controller.git
+
 var controllerKind = apps.SchemeGroupVersion.WithKind("FlightTicket");
 
 // Run begins watching and syncing
