@@ -1,17 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: api-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      company: KodeKloud
-      component: nginx
+      component: api
   template:
     metadata:
       labels:
-        component: nginx
+        component: api
     spec:
       containers:
       - name: nginx
