@@ -12,3 +12,7 @@ namePrefix: KodeKloud-
 nameSuffix: -dev
 commonAnnotations:
   branch: master
+# images:
+#   - name: nginx
+#     newName: haproxy
+#     newTag: "2.4"
