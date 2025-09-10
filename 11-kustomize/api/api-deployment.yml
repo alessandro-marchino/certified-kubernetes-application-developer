@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         component: api
+        mylabel: test
     spec:
       containers:
       - name: nginx

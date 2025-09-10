@@ -39,3 +39,14 @@ patches:
     target:
       kind: Deployment
       name: redis-deployment
+  - target:
+      kind: Deployment
+      name: api-deployment
+    patch: |-
+      - op: replace
+        path: /spec/template/metadata/labels/component
+        value: web
+      - op: add
+        path: /spec/template/metadata/labels/org
+        value: KodeKloud
+#  - path: patches/label-patch.yml
