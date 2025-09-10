@@ -16,3 +16,21 @@ commonAnnotations:
 #   - name: nginx
 #     newName: haproxy
 #     newTag: "2.4"
+
+patches:
+  # JSON-6902 patch
+  - target:
+      kind: Deployment
+      name: api-deployment
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: web-deployment
+  # Strategic merge patch
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: api-deployment
+      spec:
+        replicas: 5
