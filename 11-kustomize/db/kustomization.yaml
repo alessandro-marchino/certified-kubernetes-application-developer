@@ -6,4 +6,5 @@ resources:
   - db-service.yml
 
 commonLabels:
-  company: KodeKloud
+  feature: db
+nameSuffix: -storage

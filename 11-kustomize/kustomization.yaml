@@ -7,9 +7,9 @@ resources:
 
 commonLabels:
   company: KodeKloud
+  department: engineering
 # namespace: lab
 namePrefix: KodeKloud-
-nameSuffix: -dev
 commonAnnotations:
   branch: master
 # images:

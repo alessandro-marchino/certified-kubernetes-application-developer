@@ -5,4 +5,5 @@ resources:
   - api-service.yml
 
 commonLabels:
-  company: KodeKloud
+  feature: api
+nameSuffix: -web
