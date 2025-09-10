@@ -39,6 +39,7 @@ patches:
     target:
       kind: Deployment
       name: redis-deployment
+  # Patch dictionary
   - target:
       kind: Deployment
       name: api-deployment
@@ -49,4 +50,19 @@ patches:
       - op: add
         path: /spec/template/metadata/labels/org
         value: KodeKloud
-#  - path: patches/label-patch.yml
+  - path: patches/label-patch.yml
+  # Patch list
+  - target:
+      kind: Deployment
+      name: api-deployment
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0
+        value:
+          name: haproxy
+          image: haproxy
+      - op: add
+        path: /spec/template/spec/containers/-
+        value:
+          name: haproxy2
+          image: haproxy
