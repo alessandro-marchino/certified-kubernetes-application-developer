@@ -34,3 +34,8 @@ patches:
         name: api-deployment
       spec:
         replicas: 5
+  # File
+  - path: patches/cache-replica-patch.yml
+    target:
+      kind: Deployment
+      name: redis-deployment
