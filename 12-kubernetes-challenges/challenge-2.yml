@@ -1,0 +1,88 @@
+---
+# Master node: coredns deployment has image: 'registry.k8s.io/coredns/coredns:v1.8.6'
+# Fix kube-apiserver. Make sure its running and healthy.
+# kubeconfig = /root/.kube/config, User = 'kubernetes-admin' Cluster: Server Port = '6443'
+# sed -i 's/controlplane:6433/controlplane:6443/' .kube/config
+# sed 's|/etc/kubernetes/pki/ca-authority.crt|/etc/kubernetes/pki/ca.crt|' /etc/kubernetes/manifests/kube-apiserver.yaml
+# kubectl set image deployment/coredns -n kube-system coredns=registry.k8s.io/coredns/coredns:v1.8.6
+---
+# node01 is ready and can schedule pods?
+# kubectl uncordon node01
+---
+# Copy all images from the directory '/media' on the controlplane node to '/web' directory on node01
+# scp /media/* node01:/web
+---
+# Create new PersistentVolume = 'data-pv'
+# PersistentVolume = data-pv, accessModes = 'ReadWriteMany'
+# PersistentVolume = data-pv, hostPath = '/web'
+# PersistentVolume = data-pv, storage = '1Gi'
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /web
+    type: DirectoryOrCreate
+---
+# Create new PersistentVolumeClaim = 'data-pvc'
+# PersistentVolume = 'data-pvc', accessModes = 'ReadWriteMany'
+# PersistentVolume = 'data-pvc', storage request = '1Gi'
+# PersistentVolume = 'data-pvc', volumeName = 'data-pv'
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  volumeName: data-pv
+---
+# Create a pod for file server, name: 'gop-file-server'
+# pod: gop-file-server image: 'kodekloud/fileserver'
+# pod: gop-file-server mountPath: '/web'
+# pod: gop-file-server volumeMount name: 'data-store'
+# pod: gop-file-server persistent volume name: data-store
+# pod: gop-file-server persistent volume claim used: 'data-pvc'
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gop-file-server
+  labels:
+    app: gop-file-server
+spec:
+  containers:
+  - name: gop-file-server
+    image: kodekloud/fileserver
+    volumeMounts:
+    - name: data-store
+      mountPath: /web
+  volumes:
+  - name: data-store
+    persistentVolumeClaim:
+      claimName: data-pvc
+---
+# New Service, name: 'gop-fs-service'
+# Service name: gop-fs-service, port: '8080'
+# Service name: gop-fs-service, targetPort: '8080'
+# Service name: gop-fs-service, NodePort: '31200'
+apiVersion: v1
+kind: Service
+metadata:
+  name: gop-fs-service
+spec:
+  selector:
+    app: gop-file-server
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 31200
+---

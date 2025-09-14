@@ -1,0 +1,218 @@
+---
+# Create a new namespace: name = 'vote'
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vote
+spec: {}
+---
+# Create a deployment: name = 'vote'
+# image = 'dockersamples/examplevotingapp_vote'
+# status: 'Running'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote
+  labels:
+    app: vote-deploy
+  namespace: vote
+spec:
+  selector:
+    matchLabels:
+      app: vote-pod
+  template:
+    metadata:
+      labels:
+        app: vote-pod
+    spec:
+      containers:
+      - name: vote-container
+        image: dockersamples/examplevotingapp_vote
+---
+# Create a new service: name = vote
+# port = '8080'
+# targetPort = '80'
+# nodePort= '31000'
+# service endpoint exposes deployment 'vote'
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote
+  namespace: vote
+spec:
+  selector:
+    app: vote-deploy
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 80
+    nodePort: 31000
+---
+# Create new deployment, name: 'redis'
+# image: 'redis:alpine'
+# Volume Type: 'EmptyDir'
+# Volume Name: 'redis-data'
+# mountPath: '/data'
+# status: 'Running'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis-deploy
+  namespace: vote
+spec:
+  selector:
+    matchLabels:
+      app: redis-pod
+  template:
+    metadata:
+      labels:
+        app: redis-pod
+    spec:
+      containers:
+      - name: redis-container
+        image: redis:alpine
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        emptyDir: {}
+---
+# New Service, name = 'redis'
+# port: '6379'
+# targetPort: '6379'
+# type: 'ClusterIP'
+# service endpoint exposes deployment 'redis'
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: vote
+spec:
+  selector:
+    app: redis-deploy
+  type: ClusterIP
+  ports:
+  - port: 6379
+    targetPort: 6379
+---
+# Create new deployment. name: 'worker'
+# image: 'dockersamples/examplevotingapp_worker'
+# status: 'Running'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: worker-deploy
+  namespace: vote
+spec:
+  selector:
+    matchLabels:
+      app: worker-pod
+  template:
+    metadata:
+      labels:
+        app: worker-pod
+    spec:
+      containers:
+      - name: worker-container
+        image: dockersamples/examplevotingapp_worker
+---
+# Create new deployment, name: 'result'
+# image: 'dockersamples/examplevotingapp_result'
+# status: 'Running'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result
+  labels:
+    app: result-deploy
+  namespace: vote
+spec:
+  selector:
+    matchLabels:
+      app: result-pod
+  template:
+    metadata:
+      labels:
+        app: result-pod
+    spec:
+      containers:
+      - name: result-container
+        image: dockersamples/examplevotingapp_result
+---
+# Create a new service: name = result
+# port: '8081'
+# targetPort: '80'
+# NodePort: '31001'
+# service endpoint exposes deployment 'result'
+apiVersion: v1
+kind: Service
+metadata:
+  name: result
+  namespace: vote
+spec:
+  selector:
+    app: result-deploy
+  type: NodePort
+  ports:
+  - port: 8081
+    targetPort: 80
+    nodePort: 31001
+---
+# Create new deployment. name: 'db'
+# image: 'postgres:15-alpine' and add the env: 'POSTGRES_HOST_AUTH_METHOD=trust'
+# Volume Type: 'EmptyDir'
+# Volume Name: 'db-data'
+# mountPath: '/var/lib/postgresql/data'
+# status: 'Running'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    app: db-deploy
+  namespace: vote
+spec:
+  selector:
+    matchLabels:
+      app: db-pod
+  template:
+    metadata:
+      labels:
+        app: db-pod
+    spec:
+      containers:
+      - name: db-container
+        image: postgres:15-alpine
+        env:
+        - name: POSTGRES_HOST_AUTH_METHOD
+          value: trust
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: db-data
+        emptyDir: {}
+---
+# Create new service: 'db'
+# port: '5432'
+# targetPort: '5432'
+# type: 'ClusterIP'
+# service endpoint exposes deployment 'db'
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: vote
+spec:
+  selector:
+    app: db-deploy
+  type: ClusterIP
+  ports:
+  - port: 5432
+    targetPort: 5432
+---
