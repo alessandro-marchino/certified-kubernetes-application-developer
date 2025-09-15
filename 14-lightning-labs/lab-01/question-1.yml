@@ -1,0 +1,57 @@
+---
+# Create a PersistentVolume named log-volume with the following specifications:
+
+# StorageClassName: manual (already created for you — do not create it again)
+# AccessModes: ReadWriteMany (RWX)
+# Capacity: 1Gi
+# hostPath: /opt/volume/nginx
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: log-volume
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual
+  hostPath:
+    path: /opt/volume/nginx
+---
+# Next, create a PersistentVolumeClaim named log-claim that:
+
+# Requests at least 200Mi of storage
+# Binds to the log-volume created above
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: log-claim
+spec:
+  resources:
+    requests:
+      storage: 200Mi
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+
+---
+# Finally, create a pod named logger that:
+
+# Uses the image nginx:alpine
+# Mounts the log-claim at the path /var/www/nginx inside the container
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logger
+spec:
+  containers:
+  - name: logger-pod
+    image: nginx:alpine
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/www/nginx
+  volumes:
+  - name: log-volume
+    persistentVolumeClaim:
+      claimName: log-claim
+---
