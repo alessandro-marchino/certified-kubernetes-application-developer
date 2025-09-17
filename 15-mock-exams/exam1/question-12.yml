@@ -1,0 +1,21 @@
+---
+# Create a Persistent Volume with the given specification.
+
+# Volume Name: pv-analytics
+# Storage: 100Mi
+# Access modes: ReadWriteMany
+# Host Path: /pv/data-analytics
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-analytics
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /pv/data-analytics
+
+# kubectl apply -f pv-analytics.yml

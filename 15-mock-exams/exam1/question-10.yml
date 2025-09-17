@@ -1,0 +1,26 @@
+---
+# Update pod app-sec-kff3345 to run as Root user and with the SYS_TIME capability.
+
+# Pod Name: app-sec-kff3345
+# Image Name: ubuntu
+# SecurityContext: Capability SYS_TIME
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-sec-kff3345
+spec:
+  containers:
+  - command:
+    - sleep
+    - "4800"
+    image: ubuntu
+    name: ubuntu
+    securityContext:
+      capabilities:
+        add:
+          - SYS_TIME
+      runAsUser: 0
+
+# kubectl delete pod app-sec-kff3345 --force
+# kubectl apply -f app-sec-kgg3345.yml

@@ -1,0 +1,19 @@
+---
+# Update the environment variable on the pod webapp-color to use a green background.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    name: webapp-color
+  name: webapp-color
+spec:
+  containers:
+  - env:
+    - name: APP_COLOR
+      value: green
+    image: kodekloud/webapp-color
+    name: webapp-color
+
+# kubectl delete pod webapp-color --force
+# kubectl apply -f webapp-color.yml
