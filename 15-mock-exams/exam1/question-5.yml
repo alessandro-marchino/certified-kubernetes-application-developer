@@ -5,3 +5,5 @@
 # kubectl set image replicaset/rs-d33393 busybox-container=busybox
 # kubectl scale rs rs-d33393 --replicas=0
 # kubectl scale rs rs-d33393 --replicas=4
+
+# Alternatively: kubectl delete pod --label=name=busybox-pod

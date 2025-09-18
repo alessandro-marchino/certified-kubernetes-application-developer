@@ -17,3 +17,5 @@ spec:
 
 # kubectl delete pod webapp-color --force
 # kubectl apply -f webapp-color.yml
+
+# Alternatively: kubectl replace -f webapp-color.yml --force
