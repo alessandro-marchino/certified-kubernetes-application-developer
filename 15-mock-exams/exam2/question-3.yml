@@ -4,7 +4,7 @@
 # Set Node Affinity to the deployment to place the PODs on controlplane only.
 # NodeAffinity: requiredDuringSchedulingIgnoredDuringExecution
 
-# kubectl edit nodes controlplane
+# kubectl label node controlplane app_type=beta
 
 apiVersion: apps/v1
 kind: Deployment
