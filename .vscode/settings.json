@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "kubernetes://schema/v1@pod": "file:///home/marchino/wsl_workspace/utility/udemy/certified-kubernetes-application-developer/15-mock-exams/exam2/question-5.yml"
+    }
+}

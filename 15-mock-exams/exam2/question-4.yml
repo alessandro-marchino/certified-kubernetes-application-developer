@@ -1,0 +1,29 @@
+---
+# Create a new Ingress Resource for the service my-video-service to be made available
+# at the URL: http://ckad-mock-exam-solution.com:30093/video.
+# To create an ingress resource, the following details are: -
+# annotation: nginx.ingress.kubernetes.io/rewrite-target: /
+# host: ckad-mock-exam-solution.com
+# path: /video
+# Once set up, the curl test of the URL from the nodes should be successful: HTTP 200
+
+# curl -v http://ckad-mock-exam-solution.com:30093/video.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-video-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: ckad-mock-exam-solution.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/video"
+        backend:
+          service:
+            name: my-video-service
+            port:
+              number: 8080

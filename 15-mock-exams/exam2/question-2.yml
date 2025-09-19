@@ -1,0 +1,20 @@
+---
+# Add a taint to the node node01 of the cluster. Use the specification below:
+# key: app_type, value: alpha and effect: NoSchedule
+# Create a pod called alpha, image: redis with toleration to node01.
+
+# kubectl taint nodes node01 app_type=alpha:NoSchedule
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpha
+spec:
+  tolerations:
+    - key: "app_type"
+      operator: "Equal"
+      value: "alpha"
+      effect: "NoSchedule"
+  containers:
+  - name: alpha
+    image: redis

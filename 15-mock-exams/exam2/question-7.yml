@@ -1,0 +1,24 @@
+---
+# Create a job called whalesay with image busybox and command echo "cowsay I am going to ace CKAD!".
+# completions: 10
+# backoffLimit: 6
+# restartPolicy: Never
+# This simple job runs the popular cowsay game that was modifed by docker…
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: whalesay
+spec:
+  completions: 10
+  backoffLimit: 6
+  template:
+    spec:
+      containers:
+      - name: whalesay
+        image: busybox
+        command:
+        - /bin/sh
+        - -c
+        - echo "cowsay I am going to ace CKAD!"
+      restartPolicy: Never
